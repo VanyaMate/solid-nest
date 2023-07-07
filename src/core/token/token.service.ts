@@ -1,21 +1,25 @@
-import {ITokenService} from "./token.interface";
+import {ITokenRepository, ITokenService} from "./token.interface";
 import {ITokenDomain} from "./models/token-domain.model";
+import {Domain} from "../database/database.interface";
 
 export class TokenService implements ITokenService {
-    async create(userId: string): Promise<ITokenDomain | null> {
-        return undefined;
+
+    constructor(private readonly tokenRepository: ITokenRepository) {}
+
+    async create(userId: string): Promise<Domain<ITokenDomain>> {
+        return this.tokenRepository.create({ userId });
     }
 
-    async delete(userId: string): Promise<boolean> {
-        return false;
+    async delete(userId: string): Promise<number> {
+        return this.tokenRepository.delete({ userId });
     }
 
-    async get(userId: string): Promise<ITokenDomain | null> {
-        return undefined;
+    async get(userId: string): Promise<Domain<ITokenDomain>> {
+        return this.tokenRepository.findOne({ userId })
     }
 
-    async refresh(userId: string): Promise<ITokenDomain | null> {
-        return undefined;
+    async refresh(userId: string): Promise<Domain<ITokenDomain>> {
+        return this.tokenRepository.update({ userId }, { token: 'str' });
     }
 
 }
